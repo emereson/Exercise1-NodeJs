@@ -1,19 +1,32 @@
 const express = require('express');
 
+//controllers
 const userController = require('../controllers/user.controller');
-const userMiddlewares = require('../middlewares/users.middleware');
 
-const userRoute = express.Router();
+//middlewares
+const userMiddleware = require('../middlewares/users.middleware');
+const validationMiddleware = require('../middlewares/validations.midlleware');
+const authMiddleware = require('../middlewares/auth.middleware');
 
-userRoute
-  .route('/')
-  .get(userController.findAllUsers)
-  .post(userMiddlewares.validUsers, userController.createUsers);
+const router = express.Router();
 
-userRoute
+router.use(authMiddleware.protect);
+
+router.get('/', userController.findAllUser);
+
+router
   .route('/:id')
-  .get(userController.findOneUsers)
-  .patch(userController.oupdateUsers)
-  .delete(userController.deleteUsers);
+  .get(userMiddleware.validIfExistUser, userController.findOneUser)
+  .patch(
+    userMiddleware.validIfExistUser,
+    authMiddleware.protectAccountOwner,
+    validationMiddleware.updateUserValidation,
+    userController.updateUser
+  )
+  .delete(
+    userMiddleware.validIfExistUser,
+    authMiddleware.protectAccountOwner,
+    userController.deleteUser
+  );
 
-module.exports = userRoute;
+module.exports = router;

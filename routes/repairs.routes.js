@@ -1,19 +1,22 @@
 const express = require('express');
 
 const repairsController = require('../controllers/reapirs.controller');
-const productMiddleware = require('../middlewares/repairs.middlewares');
+const repairsMiddleware = require('../middlewares/repairs.middleware');
 
 const repairRoute = express.Router();
 
 repairRoute
   .route('/')
   .get(repairsController.findAllRepairs)
-  .post(productMiddleware.validProducts, repairsController.createRepairs);
+  .post(repairsController.createRepairs);
 
 repairRoute
   .route('/:id')
-  .get(repairsController.findOneRepairs)
-  .patch(repairsController.updateRepairs)
-  .delete(repairsController.deleteRepairs);
+  .get(repairsMiddleware.validIfExistRepair, repairsController.findOneRepairs)
+  .patch(repairsMiddleware.validIfExistRepair, repairsController.updateRepairs)
+  .delete(
+    repairsMiddleware.validIfExistRepair,
+    repairsController.deleteRepairs
+  );
 
 module.exports = repairRoute;

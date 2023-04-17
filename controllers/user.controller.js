@@ -1,103 +1,48 @@
 const User = require('../models/users.model');
+const catchAsync = require('../utils/catchAsync');
 
-exports.findAllUsers = async (req, res) => {
-  const user = await User.findAll({
-    where: {},
-  });
-  res.status(200).json({
-    status: 'success',
-    message: `all users `,
-    results: user.length,
-    user,
-  });
-};
-
-exports.findOneUsers = async (req, res) => {
-  const { id } = req.params;
-
-  const user = await User.findOne({
+exports.findAllUser = catchAsync(async (req, res) => {
+  const users = await User.findAll({
     where: {
-      id: id,
+      status: 'active',
     },
   });
-  if (!user) {
-    return res.status(404).json({
-      status: 'error',
-      message: `user whit id:${id}  not found`,
-    });
-  }
-  res.status(201).json({
+
+  return res.status(200).json({
     status: 'success',
-    message: 'the query has been done successfully',
+    results: users.length,
+    users,
+  });
+});
+
+exports.findOneUser = catchAsync(async (req, res) => {
+  const { user } = req;
+
+  return res.status(200).json({
+    status: 'success',
     user,
   });
-};
+});
 
-exports.createUsers = async (req, res) => {
-  const { name, email, password, role } = req.body;
-
-  const user = await User.create({
-    name,
-    email,
-    password,
-    role,
-  });
-
-  res.status(201).json({
-    status: 'success',
-    message: 'user creadt',
-    user,
-  });
-};
-
-exports.oupdateUsers = async (req, res) => {
-  const { id } = req.params;
+exports.updateUser = catchAsync(async (req, res) => {
   const { name, email } = req.body;
+  const { user } = req;
 
-  const user = await User.findOne({
-    where: {
-      id,
-    },
-  });
-
-  if (!user) {
-    return res.status(404).json({
-      status: 'error',
-      message: `Product whit id:${id}  not found`,
-    });
-  }
   await user.update({ name, email });
 
-  res.status(201).json({
+  return res.status(200).json({
     status: 'success',
-    message: `updated data`,
-    user,
+    message: 'the user has been updated',
   });
-};
+});
 
-exports.deleteUsers = async (req, res) => {
-  const { id } = req.params;
-  const { status } = req.body;
+exports.deleteUser = catchAsync(async (req, res) => {
+  const { user } = req;
 
-  const user = await User.findOne({
-    where: {
-      id,
-      status: true,
-    },
-  });
+  await user.update({ status: 'disabled' });
 
-  if (!user) {
-    return res.status(404).json({
-      status: 'error',
-      message: `Product whit id:${id}  not found`,
-    });
-  }
-
-  await user.update({ status: false });
-
-  return res.status(201).json({
+  return res.status(200).json({
     status: 'success',
-    message: `disabled user`,
-    user,
+    message: 'the user has been deleted',
   });
-};
+});

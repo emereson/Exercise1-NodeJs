@@ -14,6 +14,7 @@ const User = db.define('users', {
   },
   email: {
     type: DataTypes.STRING,
+    unique: true,
     allowNull: false,
   },
   password: {
@@ -21,12 +22,14 @@ const User = db.define('users', {
     allowNull: false,
   },
   role: {
-    type: DataTypes.STRING,
+    type: DataTypes.ENUM('client', 'employee'),
     allowNull: false,
+    defaultValue: 'client',
   },
   status: {
-    type: DataTypes.BOOLEAN,
-    defaultValue: true,
+    type: DataTypes.ENUM('active', 'disabled'),
+    allowNull: false,
+    defaultValue: 'active',
   },
 });
 module.exports = User;

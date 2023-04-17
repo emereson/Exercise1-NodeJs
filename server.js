@@ -3,14 +3,14 @@ const app = require('./app');
 const { db } = require('./database/config');
 
 db.authenticate()
-  .then(() => console.log('Databe Authenticated 🧛‍♂️'))
+  .then(() => console.log('database authenticated!'))
   .catch((error) => console.log(error));
 
 db.sync()
-  .then(() => console.log('Database Synced! 💂‍♀️'))
+  .then(() => console.log('database synced! 😆'))
   .catch((error) => console.log(error));
 
-const port = 3003;
+const port = process.env.PORT || 3003;
 app.listen(port, () => {
-  console.log(`app runnig on port 3003...`);
+  console.log(`app running on port ${port}`);
 });
