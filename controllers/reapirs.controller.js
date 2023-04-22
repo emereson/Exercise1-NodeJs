@@ -1,5 +1,6 @@
 const Repair = require('../models/repairs.model');
 const catchAsync = require('../utils/catchAsync');
+const User = require('../models/users.model');
 
 exports.findAllRepairs = catchAsync(async (req, res) => {
   const repair = await Repair.findAll({
@@ -25,11 +26,14 @@ exports.findOneRepairs = catchAsync(async (req, res) => {
 });
 
 exports.createRepairs = catchAsync(async (req, res) => {
-  const { date, userId } = req.body;
+  const { date, motorsNumber, desciption } = req.body;
+  const { sessionUser } = req;
 
-  await Repair.create({
+  const repair = await Repair.create({
     date,
-    userId,
+    motorsNumber,
+    desciption,
+    userId: sessionUser.id,
   });
 
   res.status(201).json({

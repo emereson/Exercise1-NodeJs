@@ -1,4 +1,5 @@
 const Repair = require('../models/repairs.model');
+const User = require('../models/users.model');
 const AppError = require('../utils/appError');
 
 const catchAsync = require('../utils/catchAsync');
@@ -11,6 +12,9 @@ exports.validIfExistRepair = catchAsync(async (req, res, next) => {
       status: 'pending',
       id,
     },
+    include: {
+      model: User,
+    },
   });
 
   if (!repair) {
@@ -18,5 +22,6 @@ exports.validIfExistRepair = catchAsync(async (req, res, next) => {
   }
 
   req.repair = repair;
+  req.user = repair.user;
   next();
 });

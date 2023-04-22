@@ -51,3 +51,9 @@ exports.loginUserValidation = [
     .withMessage('Password must be at least 8 characters long'),
   validateFields,
 ];
+exports.createRepairs = [
+  body('date').notEmpty().withMessage('date cannot be empty'),
+  body('motorsNumber').notEmpty().withMessage('motorsNumber cannot be empty'),
+  body('desciption').notEmpty().withMessage('desciption cannot be empty'),
+  validateFields,
+];
