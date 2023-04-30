@@ -1,6 +1,6 @@
 const Repair = require('../models/repairs.model');
 const catchAsync = require('../utils/catchAsync');
-const User = require('../models/users.model');
+const { db } = require('../database/config');
 
 exports.findAllRepairs = catchAsync(async (req, res) => {
   const repair = await Repair.findAll({
@@ -44,7 +44,6 @@ exports.createRepairs = catchAsync(async (req, res) => {
 });
 
 exports.updateRepairs = catchAsync(async (req, res) => {
-  const { status } = req.body;
   const { repair } = req;
 
   await repair.update({ status: 'completed' });
